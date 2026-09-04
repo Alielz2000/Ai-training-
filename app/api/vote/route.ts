@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
-import supabase from "@/lib/db";
+import { getSupabase } from "@/lib/db";
 import { NEIGHBORHOODS } from "@/lib/data/neighborhoods";
+
+export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
   try {
@@ -14,7 +16,9 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Invalid selection" }, { status: 400 });
     }
 
+    const supabase = getSupabase();
     const { error } = await supabase.from("votes").insert({ neighborhood });
+
     if (error) throw error;
 
     return NextResponse.json({ success: true });

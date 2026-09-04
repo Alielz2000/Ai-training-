@@ -1,9 +1,13 @@
 import { NextResponse } from "next/server";
-import supabase from "@/lib/db";
+import { getSupabase } from "@/lib/db";
+
+export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
+    const supabase = getSupabase();
     const { data, error } = await supabase.from("votes").select("neighborhood");
+
     if (error) throw error;
 
     const counts = new Map<string, number>();
