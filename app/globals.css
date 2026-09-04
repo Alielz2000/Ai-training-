@@ -1,0 +1,280 @@
+@import url("https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=Work+Sans:wght@400;500;600&display=swap");
+
+:root {
+  --bg: #eef3f2;
+  --surface: #ffffff;
+  --ink: #16243b;
+  --ink-soft: #46586e;
+  --accent: #c98a3b;
+  --accent-ink: #ffffff;
+  --teal: #2e6f77;
+  --line: rgba(22, 36, 59, 0.14);
+  --radius: 10px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Work Sans", system-ui, sans-serif;
+  line-height: 1.5;
+}
+
+h1,
+h2 {
+  font-family: "Newsreader", Georgia, serif;
+  font-weight: 500;
+  margin: 0;
+}
+
+.page {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 40px 20px 80px;
+}
+
+.hero {
+  max-width: 640px;
+  margin-bottom: 40px;
+}
+
+.hero h1 {
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+  line-height: 1.2;
+  color: var(--ink);
+}
+
+.hero p {
+  color: var(--ink-soft);
+  margin-top: 12px;
+  font-size: 1.05rem;
+}
+
+.vote-section {
+  margin-bottom: 56px;
+}
+
+.vote-form {
+  background: var(--surface);
+  border: 1.5px dashed var(--line);
+  border-radius: var(--radius);
+  padding: 28px;
+  max-width: 460px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field label {
+  font-size: 0.92rem;
+  color: var(--ink-soft);
+}
+
+.field select {
+  font-family: inherit;
+  font-size: 1rem;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--ink);
+}
+
+.vote-form button {
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 6px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.vote-form button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.vote-form button:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.form-msg {
+  margin: 0;
+  font-size: 0.92rem;
+}
+
+.form-msg.success {
+  color: var(--teal);
+}
+
+.form-msg.error {
+  color: #b3261e;
+}
+
+.results-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.results-header h2 {
+  font-size: 1.5rem;
+}
+
+.refresh-btn {
+  font-family: inherit;
+  font-size: 0.9rem;
+  background: none;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 8px 14px;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.refresh-btn:hover:not(:disabled) {
+  border-color: var(--teal);
+  color: var(--teal);
+}
+
+.empty-state {
+  color: var(--ink-soft);
+  font-style: italic;
+}
+
+.map-wrap {
+  position: relative;
+  margin-bottom: 32px;
+}
+
+.map-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.map-label {
+  font-family: "Work Sans", sans-serif;
+  font-size: 11px;
+  fill: var(--ink);
+  pointer-events: none;
+}
+
+.map-tooltip {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px 16px;
+  min-width: 180px;
+  box-shadow: 0 6px 20px rgba(22, 36, 59, 0.12);
+}
+
+.map-tooltip strong {
+  display: block;
+  margin-bottom: 2px;
+}
+
+.map-tooltip-total {
+  display: block;
+  color: var(--ink-soft);
+  font-size: 0.85rem;
+  margin-bottom: 8px;
+}
+
+.map-tooltip ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.9rem;
+}
+
+.map-tooltip li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  padding: 16px 0 0;
+  border-top: 1px solid var(--line);
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+
+th {
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+
+.total-cell {
+  font-weight: 600;
+}
+
+@media (max-width: 600px) {
+  .map-tooltip {
+    position: static;
+    margin-top: 12px;
+  }
+}
