@@ -7,11 +7,12 @@ import {
   MAP_WIDTH,
   MAP_HEIGHT,
 } from "@/lib/data/neighborhoods";
-import { COUNTRIES, NO_VOTES_COLOR } from "@/lib/data/countries";
 
-export type VoteRow = { country: string; neighborhood: string; count: number };
+export type VoteRow = { neighborhood: string; count: number };
 
-type Breakdown = { top: { country: string; count: number }; total: number; breakdown: { country: string; count: number }[] };
+const NO_VOTES_COLOR = "#C9CDC9";
+const MIN_VOTE_COLOR = "#CFE3E0";
+const MAX_VOTE_COLOR = "#2E6F77";
 
 function wrapLabel(name: string): string[] {
   if (name.length <= 14) return [name];
@@ -20,42 +21,47 @@ function wrapLabel(name: string): string[] {
   return [words.slice(0, mid).join(" "), words.slice(mid).join(" ")];
 }
 
-function colorFor(countryName: string) {
-  return COUNTRIES.find((c) => c.name === countryName)?.color ?? NO_VOTES_COLOR;
+function hexToRgb(hex: string) {
+  const n = parseInt(hex.slice(1), 16);
+  return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
+}
+
+function mixColors(from: string, to: string, t: number) {
+  const a = hexToRgb(from);
+  const b = hexToRgb(to);
+  const r = Math.round(a.r + (b.r - a.r) * t);
+  const g = Math.round(a.g + (b.g - a.g) * t);
+  const bl = Math.round(a.b + (b.b - a.b) * t);
+  return `rgb(${r}, ${g}, ${bl})`;
 }
 
 export default function BeirutMap({ votes }: { votes: VoteRow[] }) {
   const [active, setActive] = useState<string | null>(null);
 
-  const byNeighborhood = new Map<string, { country: string; count: number }[]>();
+  const countByNeighborhood = new Map<string, number>();
   for (const v of votes) {
-    const list = byNeighborhood.get(v.neighborhood) ?? [];
-    list.push({ country: v.country, count: v.count });
-    byNeighborhood.set(v.neighborhood, list);
+    countByNeighborhood.set(v.neighborhood, v.count);
   }
 
-  function getDominant(name: string): Breakdown | null {
-    const list = byNeighborhood.get(name) ?? [];
-    if (list.length === 0) return null;
-    const sorted = [...list].sort((a, b) => b.count - a.count);
-    const total = list.reduce((sum, v) => sum + v.count, 0);
-    return { top: sorted[0], total, breakdown: sorted };
-  }
+  const maxCount = Math.max(0, ...votes.map((v) => v.count));
 
-  const activeData = active ? getDominant(active) : null;
+  function colorFor(count: number) {
+    if (count === 0 || maxCount === 0) return NO_VOTES_COLOR;
+    return mixColors(MIN_VOTE_COLOR, MAX_VOTE_COLOR, count / maxCount);
+  }
 
   return (
     <div className="map-wrap">
       <svg
         viewBox={`0 0 ${MAP_WIDTH} ${MAP_HEIGHT}`}
         role="img"
-        aria-label="Stylized map of Beirut neighborhoods, colored by the most common country of origin reported for that area"
+        aria-label="Stylized map of Beirut neighborhoods, shaded by how many people reported living there"
         className="map-svg"
       >
         {NEIGHBORHOOD_LAYOUT.map(({ name, row, col }) => {
           const { x, y, width, height } = getCellRect(row, col);
-          const data = getDominant(name);
-          const fill = data ? colorFor(data.top.country) : NO_VOTES_COLOR;
+          const count = countByNeighborhood.get(name) ?? 0;
+          const fill = colorFor(count);
           const isActive = active === name;
           const lines = wrapLabel(name);
 
@@ -97,30 +103,27 @@ export default function BeirutMap({ votes }: { votes: VoteRow[] }) {
         })}
       </svg>
 
-      {activeData && active && (
+      {active && (
         <div className="map-tooltip">
           <strong>{active}</strong>
           <span className="map-tooltip-total">
-            {activeData.total} vote{activeData.total !== 1 ? "s" : ""}
+            {countByNeighborhood.get(active) ?? 0} vote
+            {(countByNeighborhood.get(active) ?? 0) !== 1 ? "s" : ""}
           </span>
-          <ul>
-            {activeData.breakdown.map((b) => (
-              <li key={b.country}>
-                <span className="dot" style={{ background: colorFor(b.country) }} />
-                {b.country}: {b.count}
-              </li>
-            ))}
-          </ul>
         </div>
       )}
 
       <div className="legend">
-        {COUNTRIES.map((c) => (
-          <div key={c.name} className="legend-item">
-            <span className="dot" style={{ background: c.color }} />
-            {c.name}
-          </div>
-        ))}
+        <div className="legend-scale">
+          <span>Fewer votes</span>
+          <span
+            className="legend-gradient"
+            style={{
+              background: `linear-gradient(to right, ${MIN_VOTE_COLOR}, ${MAX_VOTE_COLOR})`,
+            }}
+          />
+          <span>More votes</span>
+        </div>
         <div className="legend-item">
           <span className="dot" style={{ background: NO_VOTES_COLOR }} />
           No votes yet

@@ -205,22 +205,6 @@ h2 {
   margin-bottom: 8px;
 }
 
-.map-tooltip ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  font-size: 0.9rem;
-}
-
-.map-tooltip li {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
 .dot {
   display: inline-block;
   width: 10px;
@@ -243,6 +227,20 @@ h2 {
   display: flex;
   align-items: center;
   gap: 6px;
+}
+
+.legend-scale {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.legend-gradient {
+  display: inline-block;
+  width: 100px;
+  height: 10px;
+  border-radius: 5px;
+  border: 1px solid var(--line);
 }
 
 .table-wrap {

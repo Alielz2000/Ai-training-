@@ -27,10 +27,10 @@ export default function Home() {
   return (
     <main className="page">
       <header className="hero">
-        <h1>Where in Beirut are you from — and where do you live now?</h1>
+        <h1>Which Beirut neighborhood do you call home?</h1>
         <p>
-          A quick, informal class poll. Pick your country of origin and your
-          neighborhood, and watch the city fill in.
+          A quick, informal class poll. Pick your neighborhood and watch the
+          city fill in.
         </p>
       </header>
 

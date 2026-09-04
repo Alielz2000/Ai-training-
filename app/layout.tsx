@@ -2,13 +2,12 @@ import "./globals.css";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Beirut Origins Map",
+  title: "Beirut Neighborhoods Poll",
   description:
-    "A quick, informal poll: where people are from, and where they live across Beirut's neighborhoods.",
+    "A quick, informal poll: which neighborhood of Beirut people live in.",
   openGraph: {
-    title: "Beirut Origins Map",
-    description:
-      "Vote and watch the city fill in — country of origin, mapped by neighborhood.",
+    title: "Beirut Neighborhoods Poll",
+    description: "Vote and watch the city fill in by neighborhood.",
     type: "website",
   },
 };

@@ -1,31 +1,28 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { COUNTRIES } from "@/lib/data/countries";
 import { NEIGHBORHOODS } from "@/lib/data/neighborhoods";
 
 type Status = "idle" | "submitting" | "done" | "error";
 
 export default function VoteForm({ onVoted }: { onVoted: () => void }) {
-  const [country, setCountry] = useState("");
   const [neighborhood, setNeighborhood] = useState("");
   const [status, setStatus] = useState<Status>("idle");
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    if (!country || !neighborhood) return;
+    if (!neighborhood) return;
 
     setStatus("submitting");
     try {
       const res = await fetch("/api/vote", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ country, neighborhood }),
+        body: JSON.stringify({ neighborhood }),
       });
       if (!res.ok) throw new Error("Vote failed");
 
       setStatus("done");
-      setCountry("");
       setNeighborhood("");
       onVoted();
     } catch {
@@ -35,25 +32,6 @@ export default function VoteForm({ onVoted }: { onVoted: () => void }) {
 
   return (
     <form className="vote-form" onSubmit={handleSubmit}>
-      <div className="field">
-        <label htmlFor="country">Country of origin</label>
-        <select
-          id="country"
-          value={country}
-          onChange={(e) => setCountry(e.target.value)}
-          required
-        >
-          <option value="" disabled>
-            Choose a country
-          </option>
-          {COUNTRIES.map((c) => (
-            <option key={c.name} value={c.name}>
-              {c.name}
-            </option>
-          ))}
-        </select>
-      </div>
-
       <div className="field">
         <label htmlFor="neighborhood">Where in Beirut do you live?</label>
         <select
